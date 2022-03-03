@@ -8,6 +8,9 @@
 #   -   find 
 #   -   find_all(html_element) 
 #   -   select : selects all of the specified html tag element
+#   -   scraping page one and two of the hacker news website
+#   -   beautifulsoup is a library suitable for scraping small website
+#   -   for large scale web scraping, use scrapy (scrapy.org)
 
 from bs4 import BeautifulSoup
 import requests
@@ -15,11 +18,21 @@ import pprint
 
 response = requests.get("https://news.ycombinator.com/news")
 
+response2 = requests.get("https://news.ycombinator.com/news?p=2")
+
 
 #: soup object
-soup = BeautifulSoup(response.text, 'html.parser') 
+soup = BeautifulSoup(response.text, 'html.parser')
+soup2 = BeautifulSoup(response2.text, 'html.parser')
+
 links = soup.select('.titlelink')
+links2 = soup2.select('.titlelink')
+
 subtext = soup.select('.subtext')
+subtext2 = soup2.select('.subtext')
+
+mega_links = links + links2
+mega_subtext = subtext + subtext2
 
 #: sorting the dictionary by the key vote
 def sorted_list(hn_list):
@@ -39,4 +52,4 @@ def hack_news(links, subtext):
  
     return sorted_list(hn) 
 
-pprint.pprint(hack_news(links, subtext))
+pprint.pprint(hack_news(mega_links, mega_subtext))
