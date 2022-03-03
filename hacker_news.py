@@ -19,7 +19,9 @@ soup = BeautifulSoup(response.text, 'html.parser')
 scores = soup.find_all('a')
 links = soup.select('.storylink')
 votes = soup.select('score')
-# for index, score in enumerate(scores, start = 1):
-#     print("--------------------------")
-#     print(f"{index} -- {score}")
+
+def hack_news(links, vote):
+    for idx, _ in enumerate(links, start = 1):
+        title = links[idx].getText()
+        href = links[idx].get('href')
 
