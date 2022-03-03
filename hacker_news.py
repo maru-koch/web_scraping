@@ -11,20 +11,25 @@
 
 from bs4 import BeautifulSoup
 import requests
+import pprint
 
 response = requests.get("https://news.ycombinator.com/news")
 
+
 #: soup object
 soup = BeautifulSoup(response.text, 'html.parser') 
-links = soup.select('.storylink')
-votes = soup.select('.score')
-def hack_news(links, votes):
+links = soup.select('.titlelink')
+subtext = soup.select('.subtext')
+def hack_news(links, subtext):
     hn = []
     for idx, item in enumerate(links):
         title = links[idx].getText()
         href = links[idx].get('href', None)
-        points = votes[idx].getText()
-        hn.append({'title': title, 'href': href})
-    return hn
+        votes = subtext[idx].select('.score')
+        if len(votes):
+            points = int(votes[0].getText().replace(' points', ''))
+            hn.append({'title': title, 'href': href, 'vote': points})
+            
+    return hn 
 
-print(hack_news(links, votes))
+pprint.pprint(hack_news(links, subtext))
