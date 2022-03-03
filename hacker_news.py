@@ -20,6 +20,12 @@ response = requests.get("https://news.ycombinator.com/news")
 soup = BeautifulSoup(response.text, 'html.parser') 
 links = soup.select('.titlelink')
 subtext = soup.select('.subtext')
+
+#: sorting the dictionary by the key vote
+def sorted_list(hn_list):
+    return sorted(hn_list, key = lambda x: x['vote'], reverse = True)
+
+
 def hack_news(links, subtext):
     hn = []
     for idx, item in enumerate(links):
@@ -28,8 +34,9 @@ def hack_news(links, subtext):
         votes = subtext[idx].select('.score')
         if len(votes):
             points = int(votes[0].getText().replace(' points', ''))
-            hn.append({'title': title, 'href': href, 'vote': points})
-            
-    return hn 
+            if points >= 100:
+                hn.append({'title': title, 'href': href, 'vote': points})
+ 
+    return sorted_list(hn) 
 
 pprint.pprint(hack_news(links, subtext))
