@@ -15,6 +15,7 @@
 from bs4 import BeautifulSoup
 import requests
 import pprint
+from collections import Counter
 
 response = requests.get("https://news.ycombinator.com/news")
 
@@ -49,7 +50,11 @@ def hack_news(links, subtext):
             points = int(votes[0].getText().replace(' points', ''))
             if points >= 100:
                 hn.append({'title': title, 'href': href, 'vote': points})
- 
     return sorted_list(hn) 
+
+
+def count_words(article):
+    words = Counter.items(article)
+    return words 
 
 pprint.pprint(hack_news(mega_links, mega_subtext))
